@@ -1,0 +1,475 @@
+from pathlib import Path
+
+html = r'''<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Khám phá món ngon theo danh mục: Chay, Indian, Kosher, Vietnamese và Western." />
+  <title>Central Việt Nam Food Guide</title>
+  <style>
+    :root{
+      --bg:#fffaf4;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --accent:#b45309;
+      --accent2:#f59e0b;
+      --line:#eadfd4;
+      --shadow:0 12px 30px rgba(60, 35, 10, .08);
+      --radius:20px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:linear-gradient(180deg,#fff7ed 0%,var(--bg) 35%,#fff 100%);
+      color:var(--text);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+
+    .wrap{width:min(1120px,92%);margin:0 auto}
+
+    header{
+      position:sticky;top:0;z-index:20;
+      backdrop-filter:blur(12px);
+      background:rgba(255,250,244,.84);
+      border-bottom:1px solid rgba(234,223,212,.75);
+    }
+
+    .nav{
+      min-height:72px;
+      display:flex;align-items:center;justify-content:space-between;gap:18px;
+    }
+
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      display:grid;place-items:center;font-size:22px;
+      background:linear-gradient(145deg,var(--accent2),#fb923c);
+      box-shadow:var(--shadow);
+    }
+
+    .navlinks{display:flex;gap:16px;align-items:center;color:#4b5563;font-weight:600}
+    .navlinks a:hover{color:var(--accent)}
+
+    .hero{
+      padding:72px 0 42px;
+      display:grid;grid-template-columns:1.2fr .8fr;gap:32px;align-items:center;
+    }
+
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      background:#fff;border:1px solid var(--line);
+      color:var(--accent);font-size:14px;font-weight:800;
+    }
+
+    h1{
+      margin:16px 0 14px;
+      font-size:clamp(40px,7vw,72px);
+      line-height:.95;letter-spacing:-.04em;
+    }
+
+    .hero p{font-size:18px;line-height:1.7;color:var(--muted);max-width:680px}
+
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+    .btn{
+      border:0;border-radius:14px;padding:13px 18px;
+      cursor:pointer;font-weight:800;
+      transition:.2s ease;
+    }
+    .btn-primary{background:var(--text);color:#fff}
+    .btn-primary:hover{transform:translateY(-2px)}
+    .btn-soft{background:#fff;border:1px solid var(--line)}
+    .btn-soft:hover{border-color:#d6c3b2}
+
+    .hero-art{
+      background:radial-gradient(circle at top right,#fed7aa,#fff7ed 58%,#fff 100%);
+      border:1px solid var(--line);
+      border-radius:32px;
+      min-height:340px;
+      display:grid;place-items:center;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .plate{
+      width:min(280px,82vw);aspect-ratio:1;
+      border-radius:50%;
+      background:#fff;
+      display:grid;place-items:center;
+      box-shadow:0 20px 50px rgba(120,70,20,.18), inset 0 0 0 16px #fff7ed;
+      font-size:96px;
+      transform:rotate(-5deg);
+    }
+
+    .section{padding:24px 0 72px}
+    .section-head{
+      display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px
+    }
+    .section-head h2{font-size:32px;margin:0}
+    .section-head p{margin:0;color:var(--muted)}
+
+    .controls{
+      display:flex;flex-wrap:wrap;gap:10px;
+      margin:18px 0 26px;
+    }
+
+    .filter{
+      padding:10px 14px;border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      cursor:pointer;
+      font-weight:800;color:#4b5563;
+    }
+    .filter.active{
+      background:var(--text);color:#fff;border-color:var(--text);
+    }
+
+    .search{
+      margin-left:auto;
+      min-width:240px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:999px;
+      padding:10px 14px;
+      outline:none;
+    }
+    .search:focus{border-color:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.12)}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      transition:.2s ease;
+    }
+    .card:hover{transform:translateY(-4px)}
+    .food-img{
+      aspect-ratio:16/10;
+      display:grid;place-items:center;
+      font-size:70px;
+      background:linear-gradient(135deg,#fff7ed,#ffedd5);
+      border-bottom:1px solid var(--line);
+    }
+    .card-body{padding:18px}
+    .meta{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin-bottom:8px;
+    }
+    .category{
+      font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);
+    }
+    .price{font-weight:900}
+    .card h3{font-size:22px;margin:6px 0 8px}
+    .desc{color:var(--muted);line-height:1.6;margin:0 0 14px}
+    .tags{display:flex;gap:7px;flex-wrap:wrap}
+    .tag{
+      padding:6px 9px;border-radius:999px;
+      background:#f9fafb;border:1px solid #eceff3;
+      color:#4b5563;font-size:12px;font-weight:700;
+    }
+
+    .empty{
+      display:none;text-align:center;padding:42px;border:1px dashed var(--line);border-radius:20px;color:var(--muted)
+    }
+
+    .note{
+      margin-top:28px;
+      padding:16px 18px;
+      background:#fffbeb;border:1px solid #fde68a;
+      border-radius:16px;color:#7c5a12;line-height:1.6;
+    }
+
+    footer{
+      border-top:1px solid var(--line);
+      padding:28px 0 40px;color:var(--muted);
+    }
+
+    .footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}
+      .hero-art{min-height:260px}
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(max-width:640px){
+      .navlinks{display:none}
+      .hero{padding-top:42px}
+      .grid{grid-template-columns:1fr}
+      .controls{align-items:stretch}
+      .search{width:100%;margin-left:0;min-width:0}
+      .section-head{align-items:start;flex-direction:column}
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#">
+        <span class="logo">🍜</span>
+        <span>Central Việt Nam Food Guide</span>
+      </a>
+      <nav class="navlinks">
+        <a href="#mon-an">Món ăn</a>
+        <a href="#about">Giới thiệu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div>
+        <span class="eyebrow">✨ Khám phá món ngon theo phong cách ẩm thực</span>
+        <h1>Ăn gì hôm nay?</h1>
+        <p>
+          Chọn danh mục bạn thích: Chay, Indian, Kosher, Vietnamese hoặc Western.
+          Mỗi món có mô tả ngắn, mức giá tham khảo và các tag để khách dễ lựa chọn.
+        </p>
+        <div class="hero-actions">
+          <a href="#mon-an" class="btn btn-primary">Xem món ngay</a>
+          <button class="btn btn-soft" onclick="showAll()">Xem tất cả</button>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="plate">🍲</div>
+      </div>
+    </section>
+
+    <section id="mon-an" class="wrap section">
+      <div class="section-head">
+        <div>
+          <h2>Danh mục món ăn</h2>
+          <p>Bấm vào từng nhóm để lọc món.</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="filter active" data-filter="all">Tất cả</button>
+        <button class="filter" data-filter="chay">🌱 Chay</button>
+        <button class="filter" data-filter="indian">🍛 Indian</button>
+        <button class="filter" data-filter="kosher">✡️ Kosher</button>
+        <button class="filter" data-filter="vietnamese">🇻🇳 Vietnamese</button>
+        <button class="filter" data-filter="western">🍝 Western</button>
+
+        <input id="search" class="search" type="search" placeholder="Tìm tên món..." aria-label="Tìm món" />
+      </div>
+
+      <div id="grid" class="grid">
+        <!-- CHAY -->
+        <article class="card" data-cat="chay" data-name="Cơm chay ngũ sắc">
+          <div class="food-img">🥗</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Chay</span><span class="price">65.000đ</span></div>
+            <h3>Cơm chay ngũ sắc</h3>
+            <p class="desc">Cơm, rau củ theo mùa, nấm áp chảo và sốt mè rang.</p>
+            <div class="tags"><span class="tag">Vegetarian</span><span class="tag">Không cay</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="chay" data-name="Bún nấm chay">
+          <div class="food-img">🍜</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Chay</span><span class="price">58.000đ</span></div>
+            <h3>Bún nấm chay</h3>
+            <p class="desc">Nước dùng rau củ thanh nhẹ, nấm, đậu hũ và rau thơm.</p>
+            <div class="tags"><span class="tag">Vegan option</span><span class="tag">Light</span></div>
+          </div>
+        </article>
+
+        <!-- INDIAN -->
+        <article class="card" data-cat="indian" data-name="Butter Chicken">
+          <div class="food-img">🍛</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Indian</span><span class="price">145.000đ</span></div>
+            <h3>Butter Chicken</h3>
+            <p class="desc">Gà sốt cà chua bơ kem, dùng cùng cơm basmati hoặc naan.</p>
+            <div class="tags"><span class="tag">Indian</span><span class="tag">Mild</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="indian" data-name="Chana Masala">
+          <div class="food-img">🫘</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Indian</span><span class="price">110.000đ</span></div>
+            <h3>Chana Masala</h3>
+            <p class="desc">Đậu gà nấu cùng cà chua, hành và hỗn hợp gia vị Ấn Độ.</p>
+            <div class="tags"><span class="tag">Vegetarian</span><span class="tag">Spicy 🌶️</span></div>
+          </div>
+        </article>
+
+        <!-- KOSHER -->
+        <article class="card" data-cat="kosher" data-name="Grilled Salmon Plate">
+          <div class="food-img">🐟</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Kosher</span><span class="price">185.000đ</span></div>
+            <h3>Grilled Salmon Plate</h3>
+            <p class="desc">Cá hồi nướng, rau củ và khoai tây. Thành phần có thể điều chỉnh theo yêu cầu.</p>
+            <div class="tags"><span class="tag">Kosher-style</span><span class="tag">Fish</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="kosher" data-name="Falafel Bowl">
+          <div class="food-img">🧆</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Kosher</span><span class="price">120.000đ</span></div>
+            <h3>Falafel Bowl</h3>
+            <p class="desc">Falafel, hummus, salad, dưa leo và sốt tahini.</p>
+            <div class="tags"><span class="tag">Kosher-style</span><span class="tag">Vegetarian</span></div>
+          </div>
+        </article>
+
+        <!-- VIETNAMESE -->
+        <article class="card" data-cat="vietnamese" data-name="Phở bò">
+          <div class="food-img">🍜</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Vietnamese</span><span class="price">75.000đ</span></div>
+            <h3>Phở bò</h3>
+            <p class="desc">Phở bò truyền thống với rau thơm, hành và nước dùng đậm vị.</p>
+            <div class="tags"><span class="tag">Vietnamese</span><span class="tag">Beef</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="vietnamese" data-name="Bún chả">
+          <div class="food-img">🍢</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Vietnamese</span><span class="price">78.000đ</span></div>
+            <h3>Bún chả</h3>
+            <p class="desc">Thịt nướng, bún, rau sống và nước chấm chua ngọt.</p>
+            <div class="tags"><span class="tag">Vietnamese</span><span class="tag">Pork</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="vietnamese" data-name="Mì Quảng">
+          <div class="food-img">🥢</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Vietnamese</span><span class="price">80.000đ</span></div>
+            <h3>Mì Quảng</h3>
+            <p class="desc">Mì vàng, thịt, tôm, rau sống, bánh tráng và nước dùng cô đặc.</p>
+            <div class="tags"><span class="tag">Central Vietnam</span><span class="tag">Local favorite</span></div>
+          </div>
+        </article>
+
+        <!-- WESTERN -->
+        <article class="card" data-cat="western" data-name="Beef Burger">
+          <div class="food-img">🍔</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Western</span><span class="price">135.000đ</span></div>
+            <h3>Beef Burger</h3>
+            <p class="desc">Bò nướng, phô mai, rau xà lách, cà chua và sốt đặc biệt.</p>
+            <div class="tags"><span class="tag">Western</span><span class="tag">Beef</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="western" data-name="Creamy Pasta">
+          <div class="food-img">🍝</div>
+          <div class="card-body">
+            <div class="meta"><span class="category">Western</span><span class="price">125.000đ</span></div>
+            <h3>Creamy Pasta</h3>
+            <p class="desc">Pasta sốt kem nấm, parmesan và thảo mộc.</p>
+            <div class="tags"><span class="tag">Western</span><span class="tag">Vegetarian option</span></div>
+          </div>
+        </article>
+      </div>
+
+      <div id="empty" class="empty">Không tìm thấy món phù hợp.</div>
+
+      <div class="note">
+        <strong>Lưu ý về Kosher:</strong> chỉ ghi “Kosher certified” khi món, nguyên liệu và quy trình chế biến
+        đã được chứng nhận phù hợp. Nếu chưa có chứng nhận, nên dùng mô tả như “Kosher-style” hoặc ghi rõ thành phần.
+      </div>
+    </section>
+
+    <section id="about" class="wrap section">
+      <div class="section-head">
+        <div>
+          <h2>Giới thiệu</h2>
+          <p>Bạn có thể sửa phần này thành thông tin quán, địa chỉ, giờ mở cửa và cách liên hệ.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h3>Central Việt Nam Food Guide</h3>
+          <p class="desc">
+            Một trang giới thiệu món ăn đơn giản, dễ xem trên điện thoại.
+            Thay nội dung mẫu bằng món thật của bạn, thêm ảnh và link Zalo/Facebook nếu cần.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-row">
+      <span>© <span id="year"></span> Central Việt Nam Food Guide</span>
+      <span>Made for GitHub Pages</span>
+    </div>
+  </footer>
+
+  <script>
+    const buttons = [...document.querySelectorAll('.filter')];
+    const cards = [...document.querySelectorAll('.card[data-cat]')];
+    const search = document.getElementById('search');
+    const empty = document.getElementById('empty');
+    let activeFilter = 'all';
+
+    function update(){
+      const q = search.value.trim().toLowerCase();
+      let visible = 0;
+
+      cards.forEach(card => {
+        const categoryOK = activeFilter === 'all' || card.dataset.cat === activeFilter;
+        const searchOK = card.dataset.name.toLowerCase().includes(q);
+        const show = categoryOK && searchOK;
+
+        card.style.display = show ? '' : 'none';
+        if(show) visible++;
+      });
+
+      empty.style.display = visible ? 'none' : 'block';
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeFilter = btn.dataset.filter;
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        update();
+      });
+    });
+
+    search.addEventListener('input', update);
+
+    function showAll(){
+      activeFilter = 'all';
+      search.value = '';
+      buttons.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+      update();
+      document.getElementById('mon-an').scrollIntoView({behavior:'smooth'});
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+'''
+
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"Đã tạo file: {path}")
