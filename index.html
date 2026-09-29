@@ -140,18 +140,22 @@
       max-width:700px;
     }
 
-    .hero-art{
-      min-height:300px;
-      border:1px solid var(--line);
-      border-radius:32px;
-      background:
-        radial-gradient(circle at 75% 20%,#fed7aa 0 12%,transparent 13%),
-        radial-gradient(circle at 35% 70%,#fde68a 0 15%,transparent 16%),
-        linear-gradient(145deg,#fff,#fff0dc);
-      display:grid;
-      place-items:center;
-      box-shadow:var(--shadow);
-      font-size:96px;
+    .hero-art {
+  width: 100%;
+  height: 360px;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+
+.hero-food-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
     }
 
     .about-section{
@@ -479,17 +483,27 @@
       </p>
     </div>
 
-    <div class="hero-art" aria-hidden="true">🍽️</div>
-    <img src="https://asianinspirations.com.au/wp-content/uploads/2019/11/TheTrueSoulofVietnameseFood_1920x1280.jpg" />
-  </section>
-  <section id="restaurants" class="wrap section">
+   <div class="hero-art">
+  <img
+    src="https://asianinspirations.com.au/wp-content/uploads/2019/11/TheTrueSoulofVietnameseFood_1920x1280.jpg"
+    alt="Vietnamese food"
+    class="hero-food-image"
+  >
+</div>
 
-    <div class="section-head">
-      <div>
-        <h2 data-i18n="chooseTitle">Chọn danh mục</h2>
-        <p data-i18n="chooseText">Chọn nhóm lớn trước, sau đó chọn loại món bên dưới.</p>
-      </div>
+</section>
+
+
+<section id="restaurants" class="wrap section">
+
+  <div class="section-head">
+    <div>
+      <h2 data-i18n="chooseTitle">Chọn danh mục</h2>
+      <p data-i18n="chooseText">
+        Chọn nhóm lớn trước, sau đó chọn loại món bên dưới.
+      </p>
     </div>
+  </div>
 
 
     <div class="primary-filters" id="primaryFilters"></div>
