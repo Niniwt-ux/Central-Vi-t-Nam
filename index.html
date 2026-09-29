@@ -581,21 +581,23 @@
 
 const CATEGORIES = {
 
-  hoian: {
-    icon: "🏮",
-    vi: "Hội An",
-    en: "Hoi An",
-    subs: [
-      ["all", "Tất cả", "All"],
-      ["specialty", "Đặc sản Hội An", "Hoi An Specialties"],
-      ["cao-lau", "Cao lầu", "Cao Lau"],
-      ["chicken-rice", "Cơm gà", "Chicken Rice"],
-      ["mi-quang", "Mì Quảng", "Mi Quang"],
-      ["seafood", "Hải sản", "Seafood"],
-      ["street-food", "Street Food", "Street Food"],
-      ["cafe", "Cafe", "Cafe"]
-    ]
-  },
+hoian: {
+  icon: "🏮",
+  vi: "Hội An",
+  en: "Hoi An",
+  subs: [
+    ["all", "Tất cả", "All"],
+    ["vegan", "Vegan", "Vegan"],
+    ["vegetarian", "Vegetarian", "Vegetarian"],
+    ["specialty", "Đặc sản Hội An", "Hoi An Specialties"],
+    ["cao-lau", "Cao lầu", "Cao Lau"],
+    ["chicken-rice", "Cơm gà", "Chicken Rice"],
+    ["mi-quang", "Mì Quảng", "Mi Quang"],
+    ["seafood", "Hải sản", "Seafood"],
+    ["street-food", "Street Food", "Street Food"],
+    ["cafe", "Cafe", "Cafe"]
+  ]
+},
 
   danang: {
     icon: "🌊",
@@ -603,6 +605,8 @@ const CATEGORIES = {
     en: "Da Nang",
     subs: [
       ["all", "Tất cả", "All"],
+      ["vegan", "Vegan", "Vegan"],
+      ["vegetarian", "Vegetarian", "Vegetarian"],
       ["specialty", "Đặc sản Đà Nẵng", "Da Nang Specialties"],
       ["seafood", "Hải sản", "Seafood"],
       ["mi-quang", "Mì Quảng", "Mi Quang"],
@@ -618,6 +622,8 @@ const CATEGORIES = {
     en: "Hue",
     subs: [
       ["all", "Tất cả", "All"],
+      ["vegan", "Vegan", "Vegan"],
+      ["vegetarian", "Vegetarian", "Vegetarian"],
       ["specialty", "Đặc sản Huế", "Hue Specialties"],
       ["bun-bo", "Bún bò Huế", "Bun Bo Hue"],
       ["hue-cakes", "Bánh Huế", "Hue Cakes"],
@@ -633,6 +639,8 @@ const CATEGORIES = {
     en: "International Eats",
     subs: [
       ["all", "Tất cả", "All"],
+      ["vegan", "Vegan", "Vegan"],
+      ["vegetarian", "Vegetarian", "Vegetarian"],
       ["indian", "Indian", "Indian"],
       ["korean", "Korean", "Korean"],
       ["japanese", "Japanese", "Japanese"],
@@ -651,7 +659,7 @@ const RESTAURANTS = [
 
   {
     section: "vegetarian, hoian",
-    sub: "vegan, vietnamese-veg",
+    sub: "vegan",
     emoji: "🌿",
     name: "ROM Vegetarian Bistro - Hoi An",
     cuisineVi: "Vegan / Vegetarian",
@@ -662,7 +670,7 @@ const RESTAURANTS = [
 
   {
     section: "vegetarian, hoian",
-    sub: "vietnamese-veg, vegan",
+    sub: "vegan",
     emoji: "🥬",
     name: "Peanuts - Vegan Vietnamese Food",
     cuisineVi: "Món Việt chay",
@@ -707,7 +715,7 @@ const RESTAURANTS = [
 
 {
     section: "hoian",
-    sub: "mi quang",
+    sub: "mi quang", "vegan",
     emoji: "🍜",
     name: "Mì Quảng 92 - Mì quảng cá lóc, bò, mì tôm thịt",
     cuisineVi: "Mì quảng Hội An",
